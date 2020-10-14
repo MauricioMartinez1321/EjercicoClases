@@ -1,6 +1,8 @@
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
+
 
 class Computadora
 {
@@ -22,6 +24,40 @@ class Computadora
     int getMemoriaR();
     void setCantidadMemoria(int);
     int getCantidadMemoria();
+
+    friend ostream& operator<<(ostream &out, const Computadora &c){
+        out << left;
+        out << setw(13) << c.SistemaOp;
+        out << setw(13) << c.NombreEquipo;
+        out << setw(10)  << c.MemoriaR;
+        out << setw(10)  << c.CantidadMemoria;
+        out << endl;
+
+        return out;
+    }
+
+    friend istream& operator>>(istream &in, Computadora &c){
+        // string temp;
+        // string temp2;
+        // int ram;
+        // int mem;  
+        
+        cout << "Sistema Operativo: ";
+        getline(cin, c.SistemaOp);
+
+        cout << "Nombre Del Usuario: ";
+        getline(cin, c.NombreEquipo);
+
+        cout << "Memoria Ram: ";
+        cin >> c.MemoriaR;
+
+        cout << "Memoria De Almacenamiento: ";
+        cin >> c.CantidadMemoria;
+
+        return in;
+    }
+
+
 };
 
 Computadora::Computadora(const string &SistemaOp, const string &NombreEquipo, int MemoriaR, int CantidadMemoria)
@@ -62,7 +98,7 @@ void Computadora::setCantidadMemoria(int v){
 
 int Computadora::getCantidadMemoria(){
      return CantidadMemoria;
- }
+}
 
 class Laboratorio{
     Computadora arreglo [5];
@@ -72,6 +108,12 @@ public:
     Laboratorio();
     void AgregarComputadora(const Computadora &c);   //AgregarFinal
     void mostrar();
+
+    friend Laboratorio& operator<<(Laboratorio &L, const Computadora &c){
+    
+    L.AgregarComputadora(c);
+    return L;
+    }
 };
 
 Laboratorio::Laboratorio(){
@@ -90,13 +132,22 @@ void Laboratorio::AgregarComputadora(const Computadora &c){
 }
 
 void Laboratorio::mostrar(){
+    cout << left;
+    cout << setw(13) << "SisOp"; 
+    cout << setw(13) << "NomSist";
+    cout << setw(10) << "Ram(GB)";
+    cout << setw(10) << "Memoria(GB)";
+    cout << endl;
     for(size_t i=0; i < Cont; i++){
         Computadora &c = arreglo[i];
-        cout << "Sistema Operativo: " << c.getSistemaOp()<<endl;
-        cout << "Nombre del equipo: " << c.getNombreEquipo()<<endl;
-        cout << "Cantida de memoria RAM: " << c.getMemoriaR()<<endl;
-        cout << "Cantida de Memoria de almacenamiento(gigabytes): " << c.getCantidadMemoria()<<endl;
-        cout << endl;
+       
+       cout << c;
+
+       // cout << "Sistema Operativo: " << c.getSistemaOp()<<endl;
+       // cout << "Nombre del equipo: " << c.getNombreEquipo()<<endl;
+       // cout << "Cantida de memoria RAM: " << c.getMemoriaR()<<endl;
+       // cout << "Cantida de Memoria de almacenamiento(gigabytes): " << c.getCantidadMemoria()<<endl;
+       // cout << endl;
     }
 }
 
@@ -112,31 +163,22 @@ int main()
     c03.setMemoriaR(8);
     c03.setCantidadMemoria(3000);
 
-    Computadora c04;
-    c04.setSistemaOp("Windows");
-    c04.setNombreEquipo("Ivan");
-    c04.setMemoriaR(10);
-    c04.setCantidadMemoria(2500);
-
-    Computadora c05;
-    c05.setSistemaOp("Linux");
-    c05.setNombreEquipo("Fernanda");
-    c05.setMemoriaR(4);
-    c05.setCantidadMemoria(1000);
-
-    Computadora c06;
-    c06.setSistemaOp("Linux");
-    c06.setNombreEquipo("Jahaira");
-    c06.setMemoriaR(8);
-    c06.setCantidadMemoria(3000);
-
     Laboratorio Lab;
 
     Lab.AgregarComputadora(c02);
     Lab.AgregarComputadora(c03);
-    Lab.AgregarComputadora(c04);
-    Lab.AgregarComputadora(c05);
-    Lab.AgregarComputadora(c06);
+
+    Computadora c04;
+    cin>> c04;
+    Lab << c04;
+
+    Computadora c05;
+    cin>> c05;
+    Lab << c05;
+
+    Computadora c06;
+    cin>> c06;
+    Lab << c06;
 
     Lab.mostrar();
 
